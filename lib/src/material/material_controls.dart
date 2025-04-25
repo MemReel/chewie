@@ -19,10 +19,14 @@ import 'package:video_player/video_player.dart';
 class MaterialControls extends StatefulWidget {
   const MaterialControls({
     this.showPlayButton = true,
+    this.showSeekButton = true,
+    this.showMuteButton = true,
     super.key,
   });
 
   final bool showPlayButton;
+  final bool showSeekButton;
+  final bool showMuteButton;
 
   @override
   State<StatefulWidget> createState() {
@@ -284,7 +288,7 @@ class _MaterialControlsState extends State<MaterialControls>
                       const Expanded(child: Text('LIVE'))
                     else
                       _buildPosition(iconColor),
-                    if (chewieController.allowMuting)
+                    if (chewieController.allowMuting && widget.showMuteButton)
                       _buildMuteButton(controller),
                     const Spacer(),
                     if (chewieController.allowFullScreen) _buildExpandButton(),
@@ -407,7 +411,9 @@ class _MaterialControlsState extends State<MaterialControls>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (!isFinished && !chewieController.isLive)
+            if (!isFinished &&
+                !chewieController.isLive &&
+                widget.showSeekButton)
               CenterSeekButton(
                 iconData: Icons.replay_10,
                 backgroundColor: Colors.black54,
@@ -430,7 +436,9 @@ class _MaterialControlsState extends State<MaterialControls>
                 onPressed: _playPause,
               ),
             ),
-            if (!isFinished && !chewieController.isLive)
+            if (!isFinished &&
+                !chewieController.isLive &&
+                widget.showSeekButton)
               CenterSeekButton(
                 iconData: Icons.forward_10,
                 backgroundColor: Colors.black54,
@@ -486,9 +494,9 @@ class _MaterialControlsState extends State<MaterialControls>
           )
         ],
         style: const TextStyle(
-          fontSize: 14.0,
+          fontSize: 12.0,
           color: Colors.white,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );
@@ -700,6 +708,8 @@ class _MaterialControlsState extends State<MaterialControls>
                   Theme.of(context).disabledColor.withOpacityCompat(.5),
             ),
         draggableProgressBar: chewieController.draggableProgressBar,
+        barHeight: chewieController.materialProgressBarHeight,
+        handleHeight: chewieController.materialProgressHandleHeight,
       ),
     );
   }
